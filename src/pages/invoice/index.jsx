@@ -14,54 +14,81 @@ import axios from "axios"
 import Link from "next/link"
 import instance from "config/axios-config"
 import Swal from "@panely/sweetalert2"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import * as SolidIcon from "@fortawesome/free-solid-svg-icons"
 
 function FormBasePage(props) {
 
-  const [banner, setBanner] = useState([])
+  const [ticket, setTicket] = useState([])
 
   useEffect(() => {
-        props.pageChangeHeaderTitle("Banner")
+        props.pageChangeHeaderTitle("Ticket")
     // Set breadcrumb data
     props.breadcrumbChange([
       { text: "Dashboard", link: "/" },
-      { text: "Banner", link: "/banner" }
+      { text: "Invoice", link: "/invoice" }
     ])
 
 
-    instance.get('banner').then(e=>{
-      console.log(e.data.data)
-      setBanner(e.data.data)
+    instance.get('invoice/list/all/all').then(e=>{
+      setTicket(e.data.data)
     })
   }, []);
 
   const handleDelete = (e) => {
-    instance.delete('banner/'+e).then(e=>{
-      Swal.fire({ text: "Banner berhasil dihapus", icon: "success" })
-      instance.get('banner').then(e=>{
-      console.log(e.data.data)
-      setBanner(e.data.data)
+    instance.delete('invoice/'+e).then(e=>{
+      Swal.fire({ text: "Invoice berhasil dihapus", icon: "success" })
+      instance.get('invoice/list/all/all').then(e=>{
+      setTicket(e.data.data)
     })
     })
   }
 
-  const data = banner;
+  const data = ticket;
 const columns = [
   {
-    name: 'Image',
-    selector: 'fileName',
-    sortable: true,
-    cell: row => <div><img className="img-fluid" src={'https://epart.kandaradigital.com/public/banner/'+row.fileName} alt="" /></div>
-  },
-  {
     name: 'Title',
-    selector: 'title',
+    selector: 'invoice_title',
     sortable: true,
-    cell: row => <Link href={"/content/"+row.slug}>{row.title}</Link>,
  
   },
   {
+      name: 'For',
+      selector: 'invoice_for',
+      sortable: true
+  },
+  {
+      name: 'Period Start',
+      selector: 'invoice_period_start',
+      sortable: true
+  },
+  {
+      name: 'Period End',
+      selector: 'invoice_period_end',
+      sortable: true
+  },
+  {
+      name: 'Total',
+      selector: 'invoice_total',
+      sortable: true
+  },
+  {
+      name: 'File',
+      selector: 'invoice_file',
+      sortable: true
+  },
+  {
+      name: 'Status',
+      selector: 'status',
+      sortable: true
+  },
+  {
     name: "Action",
-    cell: row => <Link href="/"><button onClick={()=> handleDelete(row.id)} className="btn btn-danger">Delete</button></Link>
+    cell: row => <div>
+        {/* <Link href={'/ticket/'+row.ticketNo}><button className="btn btn-primary"><FontAwesomeIcon icon={SolidIcon.faEye}/></button></Link> */}
+        <Link href={'/invoice/update/'+row.id}><button className="btn btn-success"><FontAwesomeIcon icon={SolidIcon.faEdit}/></button></Link>
+        <Link href="/"><button onClick={()=> handleDelete(row.id)} className="btn btn-danger"><FontAwesomeIcon icon={SolidIcon.faTrash}/></button></Link>
+        </div>
   }
 ];
 
@@ -69,13 +96,13 @@ const columns = [
     return (
       <React.Fragment>
         <Head>
-          <title>Banner | Panely</title>
+          <title>Invoice | Panely</title>
         </Head>
         <Container fluid>
           <Card>
                       <Card.Body>
                         <div className="d-flex justify-content-between">
-                            <h1>Banner</h1>
+                            <h1>Invoice</h1>
 
                             <Link href="banner/add"><button className='btn btn-primary'>Add New</button></Link>
                         </div>

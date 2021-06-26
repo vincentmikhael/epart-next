@@ -1,6 +1,7 @@
 import { Button, Tooltip, ButtonGroup } from "@panely/components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as SolidIcon from "@fortawesome/free-solid-svg-icons"
+import HeaderUser from "./HeaderUser"
 
 function HeaderAction() {
   return (
@@ -24,29 +25,9 @@ class HeaderActionRadio extends React.Component {
 
   render() {
     return (
-      <ButtonGroup {...this.props}>
-        <Button
-          active={this.state.buttonActive === "today"}
-          onClick={() => this.handleClick("today")}
-          variant="flat-primary"
-        >
-          Today
-        </Button>
-        <Button
-          active={this.state.buttonActive === "week"}
-          onClick={() => this.handleClick("week")}
-          variant="flat-primary"
-        >
-          Week
-        </Button>
-        <Button
-          active={this.state.buttonActive === "month"}
-          onClick={() => this.handleClick("month")}
-          variant="flat-primary"
-        >
-          Month
-        </Button>
-      </ButtonGroup>
+<div>
+      <HeaderUser className="ml-2" />
+</div>
     )
   }
 }

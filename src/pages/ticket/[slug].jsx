@@ -14,23 +14,26 @@ import axios from "axios"
 import Link from "next/link"
 import instance from "config/axios-config"
 import Swal from "@panely/sweetalert2"
+import { useRouter } from "next/router"
 
 function FormBasePage(props) {
 
-  const [banner, setBanner] = useState([])
+    const router = useRouter()
+  const { slug } = router.query
+  const [ticket, setTicket] = useState({})
 
   useEffect(() => {
-        props.pageChangeHeaderTitle("Banner")
+        props.pageChangeHeaderTitle("Ticket")
     // Set breadcrumb data
     props.breadcrumbChange([
       { text: "Dashboard", link: "/" },
-      { text: "Banner", link: "/banner" }
+      { text: "Ticket", link: "/ticket" }
     ])
 
 
-    instance.get('banner').then(e=>{
-      console.log(e.data.data)
-      setBanner(e.data.data)
+    instance.get('ticket/detail/'+slug).then(e=>{
+      console.log(e.data.data[0])
+      setTicket(e.data.data[0])
     })
   }, []);
 
@@ -38,56 +41,44 @@ function FormBasePage(props) {
     instance.delete('banner/'+e).then(e=>{
       Swal.fire({ text: "Banner berhasil dihapus", icon: "success" })
       instance.get('banner').then(e=>{
-      console.log(e.data.data)
       setBanner(e.data.data)
     })
     })
   }
 
-  const data = banner;
-const columns = [
-  {
-    name: 'Image',
-    selector: 'fileName',
-    sortable: true,
-    cell: row => <div><img className="img-fluid" src={'https://epart.kandaradigital.com/public/banner/'+row.fileName} alt="" /></div>
-  },
-  {
-    name: 'Title',
-    selector: 'title',
-    sortable: true,
-    cell: row => <Link href={"/content/"+row.slug}>{row.title}</Link>,
- 
-  },
-  {
-    name: "Action",
-    cell: row => <Link href="/"><button onClick={()=> handleDelete(row.id)} className="btn btn-danger">Delete</button></Link>
-  }
-];
 
 
     return (
       <React.Fragment>
         <Head>
-          <title>Banner | Panely</title>
+          <title>Ticket | Panely</title>
         </Head>
         <Container fluid>
           <Card>
                       <Card.Body>
                         <div className="d-flex justify-content-between">
-                            <h1>Banner</h1>
-
-                            <Link href="banner/add"><button className='btn btn-primary'>Add New</button></Link>
+                            <h1>{ticket.title}</h1>
                         </div>
-                        
-                        <DataTable
-        columns={columns}
-        data={data}
-        striped
-        highlightOnHover
-        responsive
 
-      />
+                        <Row className="mt-4 border-top pt-3">
+                            <Col md="6">
+                                <p>Created At : {ticket.createdAt}</p>
+                                <p>Name : {ticket.name}</p>
+                                <p>Nik : {ticket.nik}</p>
+                                <p>Note : {ticket.note}</p>
+                                <p>Phone : {ticket.phone}</p>
+                                <p>Status: {ticket.status}</p>
+                            </Col>
+                            <Col md="6">
+                                <p>Ticket No : {ticket.ticketNo}</p>
+                                <p>Ticket Check In : {ticket.checkin}</p>
+                                <p>Ticket Check Out : {ticket.checkout}</p>
+                                <p>userID : {ticket.userID}</p>
+                            </Col>
+                        </Row>
+                        
+                        
+
          
                       </Card.Body>
                     </Card>

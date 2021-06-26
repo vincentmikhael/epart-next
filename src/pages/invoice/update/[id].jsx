@@ -20,18 +20,18 @@ import CustomInput from "@panely/components/CustomInput"
 import Select from "react-select";
 import instance from "config/axios-config"
 import Swal from "@panely/sweetalert2"
-import AsyncSelect from "react-select/async";
+import { useRouter } from "next/router"
 
 function FormBasePage(props) {
 
   const [visitor, setVisitor] = useState([])
 
   useEffect(() => {
-        props.pageChangeHeaderTitle("User")
+        props.pageChangeHeaderTitle("Invoice")
     // Set breadcrumb data
     props.breadcrumbChange([
       { text: "Dashboard", link: "/" },
-      { text: "User", link: "/user/register" }
+      { text: "Invoice", link: "/invoice" }
     ])
   }, []);
 
@@ -39,13 +39,13 @@ function FormBasePage(props) {
     return (
       <React.Fragment>
         <Head>
-          <title>User</title>
+          <title>Invoice</title>
         </Head>
         <Container fluid>
           <Card>
-                      <Card.Body className="pb-5">
+                      <Card.Body>
                         <div className="d-flex justify-content-between">
-                            <h1>Approve User</h1>
+                            <h2 className="mb-3">Update Invoice</h2>
                         </div>
                         
                           <Login1Form />
@@ -57,25 +57,13 @@ function FormBasePage(props) {
 }
 
 function Login1Form() {
-
-  const [userID, setUserID] = useState("")
-  const [data, setData] = useState([])
-
-  useEffect(() => {
-    let a = []
-    instance.get('users/list').then(e=>{
-    e.data.data.map(e =>{
-      a.push({
-        label: e.userID,
-        value: e.userID
-      })
-    })
-  })
-  setData(a)
-
-  }, [])
+  const router = useRouter()
+  const { id } = router.query
+  // Define Yup schema for form validation
   const schema = yup.object().shape({
-
+    status: yup
+      .string()
+      .required("Harus Diisi"),
   })
 
   const { control, handleSubmit, errors,reset } = useForm({
@@ -83,51 +71,50 @@ function Login1Form() {
     resolver: yupResolver(schema),
     // Define the default values for all input forms
     defaultValues: {
-      userID: ""
+      status: ""
     }
   })
 
-
   // Handle form submit event
   const onSubmit = data => {
-    instance.put('/users/approve',{
-      userID: userID
-    }).then(e=>{
+    let a = {
+      status: data.status,
+      id: id
+    }
+    instance.put('invoice',a).then(e=>{
       if(e.data.status){
-        Swal.fire({ text: "User berhasil di approve", icon: "success" })
+        reset({
+      status: ""
+    })
+        Swal.fire({ text: "Invoice berhasil di update", icon: "success" })
       }else{
-        Swal.fire({ title: "User gagal di approve", text: e.data.message, icon: "error" })
+        Swal.fire({ title: "Invoice gagal di update", text: e.data.message, icon: "error" })
       }
     })
   }
- 
-//   const filterData = (inputValue) => {
-  
-
-// };
-
-  const loadOptions = (inputValue, callback) => {
-  return callback(data.filter(i => i.label.includes(inputValue)))
-};
-
-
-  const getValue = option =>{
-   setUserID(option.value)
-  }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className="mb-5 pb-5s">
+    <Form onSubmit={handleSubmit(onSubmit)}>
       {/* BEGIN Form Group */}
       <Row>
-        <Col md="6">
-            <AsyncSelect
-          cacheOptions
-          loadOptions={loadOptions}
-          defaultOptions={data}
-          onChange={getValue}
-        />
-        </Col>
-          
+          <Col md="6">
+                <Form.Group>
+                    <FloatLabel size="lg">
+                    <Controller
+                        as={Input}
+                        type="text"
+                        id="status"
+                        name="status"
+                        size="lg"
+                        control={control}
+                        invalid={Boolean(errors.status)}
+                        placeholder="Please insert your status"
+                    />
+                    <Label for="status">status</Label>
+                    {errors.status && <Form.Feedback children={errors.status.message} />}
+                    </FloatLabel>
+                </Form.Group>
+          </Col>
 
       </Row>
       
@@ -136,7 +123,7 @@ function Login1Form() {
 
       <div className="d-flex align-items-center justify-content-between">
 
-        <Button type="submit" className="mt-3" variant="label-primary" size="lg" width="widest">
+        <Button type="submit" variant="label-primary" size="lg" width="widest">
           Submit
         </Button>
       </div>

@@ -6,38 +6,38 @@ class Widget33Component extends React.Component {
   state = {
     data: [
       {
-        title: "$27,639",
-        subtitle: "Total revenue",
+        title: "Owner",
+        subtitle: "10",
         avatar: () => (
           <Widget8.Avatar display circle variant="label-info" className="m-0">
-            <FontAwesomeIcon icon={SolidIcon.faDollarSign}/>
+            <FontAwesomeIcon icon={SolidIcon.faKey}/>
           </Widget8.Avatar>
         )
       },
       {
-        title: "87,123",
-        subtitle: "Order received",
+        title: "Tenant",
+        subtitle: "20",
         avatar: () => (
           <Widget8.Avatar display circle variant="label-primary" className="m-0">
-            <FontAwesomeIcon icon={SolidIcon.faDollyFlatbed}/>
+            <FontAwesomeIcon icon={SolidIcon.faHotel}/>
           </Widget8.Avatar>
         )
       },
       {
-        title: "237",
-        subtitle: "New users",
+        title: "Unit",
+        subtitle: "50",
+        avatar: () => (
+          <Widget8.Avatar display circle variant="label-success" className="m-0">
+            <FontAwesomeIcon icon={SolidIcon.faSuitcase}/>
+          </Widget8.Avatar>
+        )
+      },
+      {
+        title: "Visitor",
+        subtitle: "100",
         avatar: () => (
           <Widget8.Avatar display circle variant="label-success" className="m-0">
             <FontAwesomeIcon icon={SolidIcon.faUsers}/>
-          </Widget8.Avatar>
-        )
-      },
-      {
-        title: "5,726",
-        subtitle: "Unique visits",
-        avatar: () => (
-          <Widget8.Avatar display circle variant="label-danger" className="m-0">
-            <FontAwesomeIcon icon={SolidIcon.faLink}/>
           </Widget8.Avatar>
         )
       }
@@ -54,8 +54,8 @@ class Widget33Component extends React.Component {
             return (
               <Widget10.Item key={index}>
                 <Widget10.Content>
-                  <Widget10.Title children={title} />
-                  <Widget10.Subtitle children={subtitle} />
+                  <Widget10.Title className="text-center" children={title} />
+                  <Widget10.Title className="text-center" children={subtitle} />
                 </Widget10.Content>
                 <Widget10.Addon>
                   <WidgetAvatar />

@@ -22,35 +22,7 @@ function HeaderComponent(props) {
       <Sticky enabled={true} top={0} bottomBoundary={0} className="sticky-header">
         {/* BEGIN Header Holder */}
         <Header.Holder desktop>
-          <Header.Container fluid>
-            <Header.Wrap>
-              <HeaderNav />
-            </Header.Wrap>
-            <Header.Wrap block>
-              <HeaderSearch />
-            </Header.Wrap>
-            <Header.Wrap>
-              <HeaderNotification variant="label-primary" />
-              <HeaderChat variant="label-primary" className="ml-2" />
-              <Button
-                icon
-                variant="label-primary"
-                className="ml-2"
-                onClick={() => sidemenuToggle("agenda")}
-              >
-                <FontAwesomeIcon icon={RegularIcon.faCalendarAlt} />
-              </Button>
-              <Button
-                icon
-                variant="label-primary"
-                className="ml-2"
-                onClick={() => sidemenuToggle("setting")}
-              >
-                <FontAwesomeIcon icon={RegularIcon.faListAlt} />
-              </Button>
-              <HeaderUser className="ml-2" />
-            </Header.Wrap>
-          </Header.Container>
+
         </Header.Holder>
         {/* END Header Holder */}
       </Sticky>

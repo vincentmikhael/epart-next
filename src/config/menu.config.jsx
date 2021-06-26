@@ -45,6 +45,19 @@ const MENU = [
       },
   ]
   },
+    {
+    title: "Apartement",
+    icon: () => <FontAwesomeIcon icon={SolidIcon.faDice} />,
+    child: [
+      {
+      title: "Add Master",
+      bullet: true,
+      link: "/apartement/master/add"
+      },
+  ]
+
+  },
+
   {
     title: "Content",
     icon: () => <FontAwesomeIcon icon={SolidIcon.faDice} />,
@@ -58,6 +71,52 @@ const MENU = [
       title: "Add Content",
       bullet: true,
       link: "/content/create"
+      },
+  ]
+
+  },
+  {
+    title: "Banner",
+    icon: () => <FontAwesomeIcon icon={SolidIcon.faDice} />,
+    child: [
+      {
+      title: "List Banner",
+      bullet: true,
+      link: "/banner"
+      }
+  ]
+
+  },
+  {
+    title: "Ticket",
+    icon: () => <FontAwesomeIcon icon={SolidIcon.faDice} />,
+    child: [
+      {
+      title: "List Ticket",
+      bullet: true,
+      link: "/ticket"
+      },
+      {
+      title: "Add Ticket",
+      bullet: true,
+      link: "/ticket/add"
+      }
+  ]
+
+  },
+  {
+    title: "Invoice",
+    icon: () => <FontAwesomeIcon icon={SolidIcon.faDice} />,
+    child: [
+      {
+      title: "List Invoice",
+      bullet: true,
+      link: "/invoice"
+      },
+      {
+      title: "Add Invoice",
+      bullet: true,
+      link: "/invoice/add"
       },
   ]
 

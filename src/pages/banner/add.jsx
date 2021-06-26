@@ -20,18 +20,17 @@ import CustomInput from "@panely/components/CustomInput"
 import Select from "react-select";
 import instance from "config/axios-config"
 import Swal from "@panely/sweetalert2"
-import AsyncSelect from "react-select/async";
 
 function FormBasePage(props) {
 
   const [visitor, setVisitor] = useState([])
 
   useEffect(() => {
-        props.pageChangeHeaderTitle("User")
+        props.pageChangeHeaderTitle("Banner")
     // Set breadcrumb data
     props.breadcrumbChange([
       { text: "Dashboard", link: "/" },
-      { text: "User", link: "/user/register" }
+      { text: "Banner", link: "/banner/add" }
     ])
   }, []);
 
@@ -39,13 +38,13 @@ function FormBasePage(props) {
     return (
       <React.Fragment>
         <Head>
-          <title>User</title>
+          <title>Banner</title>
         </Head>
         <Container fluid>
           <Card>
-                      <Card.Body className="pb-5">
+                      <Card.Body>
                         <div className="d-flex justify-content-between">
-                            <h1>Approve User</h1>
+                            <h1>Banner</h1>
                         </div>
                         
                           <Login1Form />
@@ -57,25 +56,12 @@ function FormBasePage(props) {
 }
 
 function Login1Form() {
-
-  const [userID, setUserID] = useState("")
-  const [data, setData] = useState([])
-
-  useEffect(() => {
-    let a = []
-    instance.get('users/list').then(e=>{
-    e.data.data.map(e =>{
-      a.push({
-        label: e.userID,
-        value: e.userID
-      })
-    })
-  })
-  setData(a)
-
-  }, [])
+    const [image, setImage] = useState("")
+  // Define Yup schema for form validation
   const schema = yup.object().shape({
-
+    title: yup
+      .string()
+      .required("Harus Diisi"),
   })
 
   const { control, handleSubmit, errors,reset } = useForm({
@@ -83,51 +69,64 @@ function Login1Form() {
     resolver: yupResolver(schema),
     // Define the default values for all input forms
     defaultValues: {
-      userID: ""
+      title: ""
     }
   })
 
+  const handleImage = e => {
+      console.log(e)
+    setImage(e.target.files[0])
+  }
 
   // Handle form submit event
   const onSubmit = data => {
-    instance.put('/users/approve',{
-      userID: userID
-    }).then(e=>{
+      let formData = new FormData();
+      formData.append('uploadFile',image)
+      formData.append('title',data.title)
+    instance.post('/banner',formData).then(e=>{
+          console.log(e)
       if(e.data.status){
-        Swal.fire({ text: "User berhasil di approve", icon: "success" })
+        
+        reset({
+      title: "",
+    })
+    setImage("")
+        Swal.fire({ text: "Banner berhasil dibuat", icon: "success" })
       }else{
-        Swal.fire({ title: "User gagal di approve", text: e.data.message, icon: "error" })
+        Swal.fire({ title: "Banner gagal dibuat", text: e.data.message, icon: "error" })
       }
     })
   }
- 
-//   const filterData = (inputValue) => {
-  
-
-// };
-
-  const loadOptions = (inputValue, callback) => {
-  return callback(data.filter(i => i.label.includes(inputValue)))
-};
-
-
-  const getValue = option =>{
-   setUserID(option.value)
-  }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className="mb-5 pb-5s">
+    <Form onSubmit={handleSubmit(onSubmit)}>
       {/* BEGIN Form Group */}
       <Row>
-        <Col md="6">
-            <AsyncSelect
-          cacheOptions
-          loadOptions={loadOptions}
-          defaultOptions={data}
-          onChange={getValue}
-        />
+          <Col md="6">
+                <Form.Group>
+                    <FloatLabel size="lg">
+                    <Controller
+                        as={Input}
+                        type="text"
+                        id="title"
+                        name="title"
+                        size="lg"
+                        control={control}
+                        invalid={Boolean(errors.title)}
+                        placeholder="Please insert your title"
+                    />
+                    <Label for="title">Title</Label>
+                    {errors.title && <Form.Feedback children={errors.title.message} />}
+                    </FloatLabel>
+                </Form.Group>
+          </Col>
+
+          <Col md="6">
+            <Form.Group className="mb-0">
+                <Input type="file"name="uploadFile" onChange={handleImage} invalid={Boolean(errors.uploadFile)}></Input>
+                    {errors.uploadFile && <Form.Feedback children={errors.uploadFile.message} />}
+                  </Form.Group>
         </Col>
-          
 
       </Row>
       
@@ -136,7 +135,7 @@ function Login1Form() {
 
       <div className="d-flex align-items-center justify-content-between">
 
-        <Button type="submit" className="mt-3" variant="label-primary" size="lg" width="widest">
+        <Button type="submit" variant="label-primary" size="lg" width="widest">
           Submit
         </Button>
       </div>

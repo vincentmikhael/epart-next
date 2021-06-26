@@ -17,20 +17,20 @@ import Swal from "@panely/sweetalert2"
 
 function FormBasePage(props) {
 
-  const [banner, setBanner] = useState([])
+  const [ticket, setTicket] = useState([])
 
   useEffect(() => {
-        props.pageChangeHeaderTitle("Banner")
+        props.pageChangeHeaderTitle("Ticket")
     // Set breadcrumb data
     props.breadcrumbChange([
       { text: "Dashboard", link: "/" },
-      { text: "Banner", link: "/banner" }
+      { text: "Ticket", link: "/ticket" }
     ])
 
 
-    instance.get('banner').then(e=>{
+    instance.get('ticket/list/open').then(e=>{
       console.log(e.data.data)
-      setBanner(e.data.data)
+      setTicket(e.data.data)
     })
   }, []);
 
@@ -38,30 +38,41 @@ function FormBasePage(props) {
     instance.delete('banner/'+e).then(e=>{
       Swal.fire({ text: "Banner berhasil dihapus", icon: "success" })
       instance.get('banner').then(e=>{
-      console.log(e.data.data)
       setBanner(e.data.data)
     })
     })
   }
 
-  const data = banner;
+  const data = ticket;
 const columns = [
   {
-    name: 'Image',
-    selector: 'fileName',
+    name: 'No Ticket',
+    selector: 'ticketNo',
     sortable: true,
-    cell: row => <div><img className="img-fluid" src={'https://epart.kandaradigital.com/public/banner/'+row.fileName} alt="" /></div>
   },
   {
     name: 'Title',
     selector: 'title',
     sortable: true,
-    cell: row => <Link href={"/content/"+row.slug}>{row.title}</Link>,
  
   },
   {
+      name: 'Ticket Check In',
+      selector: 'ticket_checkin',
+      sortable: true
+  },
+  {
+      name: 'Ticket Check Out',
+      selector: 'ticket_checkout',
+      sortable: true
+  },
+  {
     name: "Action",
-    cell: row => <Link href="/"><button onClick={()=> handleDelete(row.id)} className="btn btn-danger">Delete</button></Link>
+    cell: row => <div>
+        <Link href={'/ticket/'+row.ticketNo}><button className="btn btn-primary">View</button></Link>
+        <Link href={'/ticket/update/'+row.ticketNo}><button className="btn btn-success">Update Status</button></Link>
+        <Link href="/"><button onClick={()=> handleDelete(row.id)} className="btn btn-danger">Delete</button></Link>
+        </div>
   }
 ];
 
@@ -69,13 +80,13 @@ const columns = [
     return (
       <React.Fragment>
         <Head>
-          <title>Banner | Panely</title>
+          <title>Ticket | Panely</title>
         </Head>
         <Container fluid>
           <Card>
                       <Card.Body>
                         <div className="d-flex justify-content-between">
-                            <h1>Banner</h1>
+                            <h1>Ticket</h1>
 
                             <Link href="banner/add"><button className='btn btn-primary'>Add New</button></Link>
                         </div>
